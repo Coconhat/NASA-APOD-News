@@ -1,28 +1,136 @@
-/* App.css */
+
 .header {
   display: flex;
   align-items: center; 
-  padding: 10px 20px;
+  padding: 20px 30px;
   background-color: #f8f9fa;
   position: fixed;
   top: 0;
   width: 100%;
-  box-shadow: 0 4px 2px -2px gray;
+  box-shadow: none; 
   z-index: 1000;
 }
 
 .logoImage {
-  height: 50px;
+  height: 70px;
   width: auto;
 }
 
 .letterHeader {
-  margin-left: 15px;
-  font-size: 24px;
+  margin-left: 20px;
+  font-size: 32px;
   font-weight: bold;
   color: #333;
 }
 
-p {
-  margin: 0;
+.searchBar {
+  margin-top: 100px; 
+  padding: 20px 60px;
+  height: 80px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  background-color: white;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
+
+.searchBar button {
+  background-color: transparent;
+  color: grey;
+  border: none;
+  padding: 15px 30px;
+  margin: 0 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 18px;
+  transition: color 0.3s ease;
+}
+
+.searchBar button:hover {
+  color: #0056b3;
+}
+
+.searchBar button:active {
+  color: #003f7f;
+}
+
+p {
+  font-family: poppins;
+}
+
+h2{
+    font-family: poppins;
+
+}
+
+.trending-container{
+  max-width: 80vh;
+  max-height: 80vh;
+}
+
+.trending-image {
+  width: 100%;
+  height: auto;
+  max-height: 300px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+
+
+.trending-container {
+  max-width: 80vh;
+  max-height: 80vh;
+}
+
+.image-container {
+  position: relative; 
+  width: 100%;
+}
+
+.trending-image {
+  width: 100%;
+  height: auto;
+  max-height: 300px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.custom-button {
+  background-color: transparent;
+  color: #007bff; 
+  border: 2px solid #007bff; 
+  padding: 10px 20px;
+  margin: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.custom-button:hover {
+  background-color: #007bff;
+  color: white; 
+}
+
+.custom-button:active {
+  background-color: #0056b3; 
+  border-color: #0056b3; 
+  color: white; 
+}
+
+
+.trending-p {
+  font-family: 'Poppins', sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: white;
+  background-color: #007bff;
+  padding: 10px 20px;
+  margin: 20px 0;
+  border-radius: 10px;
+  max-width: 300px;
+  
+}
+
+
