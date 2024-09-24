@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import "./App.css";
 import Button from "./components/Button";
-
+import TextExpander from "./assets/utils/TextExpander";
 function App() {
   const [data, setData] = useState(null);
 
@@ -75,17 +75,20 @@ function Trending({ data }) {
   }
 
   return (
-    <div>
+    <div className="trending-container">
       <p className="trending-p">Trending Now </p>
-      <div className="trending-container">
+      <div className="trending-container2">
         <div className="image-container">
           <img className="trending-image" src={data.url} alt={data.title} />
           <div className="title-overlay">
             <h2>{data.title}</h2>
           </div>
-          <Button onClick={handleClick}>Learn more</Button>
         </div>
-        {click && <p>{data.explanation}</p>}
+        <TextExpander numberOfText={30} className="trending-info">
+
+        {data.explanation}
+        </TextExpander>
+       
       </div>
     </div>
   );
