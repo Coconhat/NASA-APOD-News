@@ -26,7 +26,7 @@ function App() {
     }
 
     getAPI();
-  }, []); 
+  }, []);
 
   return (
     <>
@@ -74,9 +74,14 @@ function Trending({ data }) {
     setClick(!click);
   }
 
+  const formattedDate = new Date(data.date).toLocaleDateString(undefined, {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
   return (
     <div className="trending-container">
-      <p className="trending-p">Trending Now </p>
+      <p className="trending-p">{formattedDate}</p>
       <div className="trending-container2">
         <div className="image-container">
           <img className="trending-image" src={data.url} alt={data.title} />
@@ -85,15 +90,11 @@ function Trending({ data }) {
           </div>
         </div>
         <TextExpander numberOfText={30} className="trending-info">
-
-        {data.explanation}
+          {data.explanation}
         </TextExpander>
-       
       </div>
     </div>
   );
 }
-
-
 
 export default App;
