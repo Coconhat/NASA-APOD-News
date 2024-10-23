@@ -1,100 +1,156 @@
 import { useState, useEffect } from "react";
 import "./App.css";
-import Button from "./components/Button";
 import TextExpander from "./assets/utils/TextExpander";
+import Button from "./components/Button"
+import Header from "./components/Header";
+
 function App() {
-  const [data, setData] = useState(null);
+  const [news, setNews] = useState([]);
+  const [modalData, setModalData] = useState(null);
 
   useEffect(() => {
     async function getAPI() {
       const key = "ENih9eDN948LbnogKhIOWaAWAI4ernkzAsnfc1y5";
 
-      try {
-        const response = await fetch(
-          `https://api.nasa.gov/planetary/apod?api_key=${key}`
+      const fetchNewsForDate = async (date) => {
+        try {
+          const response = await fetch(
+            `https://api.nasa.gov/planetary/apod?api_key=${key}&date=${date}`
+          );
+
+          if (!response.ok) {
+            throw new Error("Error in fetching data...");
+          }
+          const data = await response.json();
+
+          
+          return {
+            image: data.url,
+            title: data.title,
+            description: data.explanation,
+            date: data.date,
+          };
+        } catch (error) {
+          console.error("There was a problem with fetching data...", error);
+          return null;
+        }
+      };
+
+      
+      const today = new Date();
+      const newsPromises = [];
+
+      for (let i = 0; i < 30; i++) {
+        const date = new Date(today);
+        date.setDate(today.getDate() - i); 
+        const formattedDate = date.toISOString().split("T")[0];
+        newsPromises.push(fetchNewsForDate(formattedDate));
+      }
+
+      const newsResults = await Promise.all(newsPromises);
+
+      
+      setNews((prevNews) => {
+        
+        const existingTitles = new Set(prevNews.map((item) => item.title));
+
+        
+        const newNewsItems = newsResults.filter(
+          (item) => item !== null && !existingTitles.has(item.title)
         );
 
-        if (!response.ok) {
-          throw new Error("Error in fetching data...");
-        }
-        const dataa = await response.json();
+        
+        const updatedNews = [...prevNews, ...newNewsItems];
 
-        setData(dataa);
-      } catch (error) {
-        console.error("There was a problem with fetching data...", error);
-      }
+        
+        if (updatedNews.length > 30) {
+          updatedNews.splice(0, updatedNews.length - 30);
+        }
+
+        return updatedNews; 
+      });
+
     }
 
     getAPI();
   }, []);
 
+  const openModal = (item) => {
+    setModalData(item);
+  };
+
+  const closeModal = () => {
+    setModalData(null);
+  };
+
   return (
     <>
       <Header />
-      <SearchBar />
-      <Trending data={data} />
+      <NewsList news={news} openModal={openModal} />
+      {modalData && <Modal data={modalData} onClose={closeModal} />}
     </>
   );
 }
 
-function Header() {
+
+function NewsList({ news, openModal }) {
   return (
-    <div className="header">
-      <Logo />
-      <p className="letterHeader">APOD NASA NEWS</p>
+    <div className="news-list">
+      {news.map((item, index) => (
+        <Trending key={index} data={item} onReadMore={() => openModal(item)} />
+      ))}
     </div>
   );
 }
 
-function Logo() {
-  return (
-    <div>
-      <img src="src/assets/temp-logo.png" alt="logo" className="logoImage" />
-    </div>
-  );
-}
-
-function SearchBar() {
-  return (
-    <div className="searchBar">
-      <button>Home</button>
-      <button>About</button>
-      <button>Latest News</button>
-      <button>Contact</button>
-    </div>
-  );
-}
-
-function Trending({ data }) {
+function Trending({ data, onReadMore }) {
   if (!data) return null;
-
-  const [click, setClick] = useState(false);
-
-  function handleClick() {
-    setClick(!click);
-  }
 
   const formattedDate = new Date(data.date).toLocaleDateString(undefined, {
     year: "numeric",
     month: "short",
     day: "numeric",
   });
+
   return (
     <div className="trending-container">
       <p className="trending-p">{formattedDate}</p>
       <div className="trending-container2">
         <div className="image-container">
-          <img className="trending-image" src={data.url} alt={data.title} />
+          <img className="trending-image" src={data.image} alt={data.title} />
           <div className="title-overlay">
             <h2>{data.title}</h2>
           </div>
+          <TextExpander numberOfText={30}>{data.description}</TextExpander>
+          <Button className="read-more" onClick={onReadMore}>
+            Read More
+          </Button>
         </div>
-        <TextExpander numberOfText={30} className="trending-info">
-          {data.explanation}
-        </TextExpander>
       </div>
     </div>
   );
 }
+
+// Modal Component
+function Modal({ data, onClose }) {
+  return (
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <h2>{data.title}</h2>
+        <p className="modal-date">{new Date(data.date).toLocaleDateString()}</p>
+        <img className="modal-image" src={data.image} alt={data.title} />
+        <div className="modal-description">
+          <p>{data.description}</p>
+        </div>
+        <button className="modal-close" onClick={onClose}>
+          Close
+        </button>
+      </div>
+    </div>
+  );
+}
+
+
+
 
 export default App;
