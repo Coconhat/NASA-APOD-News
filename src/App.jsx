@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import "./App.css";
 import TextExpander from "./assets/utils/TextExpander";
-import Button from "./components/Button"
+import Button from "./components/Button";
 import Header from "./components/Header";
 
 function App() {
@@ -23,7 +23,6 @@ function App() {
           }
           const data = await response.json();
 
-          
           return {
             image: data.url,
             title: data.title,
@@ -36,40 +35,33 @@ function App() {
         }
       };
 
-      
       const today = new Date();
       const newsPromises = [];
 
       for (let i = 0; i < 30; i++) {
         const date = new Date(today);
-        date.setDate(today.getDate() - i); 
+        date.setDate(today.getDate() - i);
         const formattedDate = date.toISOString().split("T")[0];
         newsPromises.push(fetchNewsForDate(formattedDate));
       }
 
       const newsResults = await Promise.all(newsPromises);
 
-      
       setNews((prevNews) => {
-        
         const existingTitles = new Set(prevNews.map((item) => item.title));
 
-        
         const newNewsItems = newsResults.filter(
           (item) => item !== null && !existingTitles.has(item.title)
         );
 
-        
         const updatedNews = [...prevNews, ...newNewsItems];
 
-        
         if (updatedNews.length > 30) {
           updatedNews.splice(0, updatedNews.length - 30);
         }
 
-        return updatedNews; 
+        return updatedNews;
       });
-
     }
 
     getAPI();
@@ -92,18 +84,29 @@ function App() {
   );
 }
 
-
 function NewsList({ news, openModal }) {
+  const today = new Date().toISOString().split("T")[0];
+
   return (
     <div className="news-list">
-      {news.map((item, index) => (
-        <Trending key={index} data={item} onReadMore={() => openModal(item)} />
-      ))}
+      {news.map((item, index) =>
+        item.date === today ? (
+          <div key={index} className="today-news">
+            <Trending data={item} onReadMore={() => openModal(item)} />
+          </div>
+        ) : (
+          <Trending
+            key={index}
+            data={item}
+            onReadMore={() => openModal(item)}
+          />
+        )
+      )}
     </div>
   );
 }
 
-function Trending({ data, onReadMore }) {
+function Trending({ data, onReadMore, className }) {
   if (!data) return null;
 
   const formattedDate = new Date(data.date).toLocaleDateString(undefined, {
@@ -113,18 +116,30 @@ function Trending({ data, onReadMore }) {
   });
 
   return (
-    <div className="trending-container">
+    <div className={`trending-container ${className}`}>
+      {" "}
       <p className="trending-p">{formattedDate}</p>
       <div className="trending-container2">
         <div className="image-container">
-          <img className="trending-image" src={data.image} alt={data.title} />
+          {data.media_type === "video" ? (
+            <iframe
+              className="trending-video"
+              title={data.title}
+              src={data.url}
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          ) : (
+            <img className="trending-image" src={data.image} alt={data.title} />
+          )}
           <div className="title-overlay">
             <h2>{data.title}</h2>
           </div>
           <TextExpander numberOfText={30}>{data.description}</TextExpander>
-          <Button className="read-more" onClick={onReadMore}>
+          <button className="read-more" onClick={onReadMore}>
             Read More
-          </Button>
+          </button>
         </div>
       </div>
     </div>
@@ -149,8 +164,5 @@ function Modal({ data, onClose }) {
     </div>
   );
 }
-
-
-
 
 export default App;
