@@ -7,9 +7,11 @@ import Header from "./components/Header";
 function App() {
   const [news, setNews] = useState([]);
   const [modalData, setModalData] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     async function getAPI() {
+      setIsLoading(true);
       const key = "ENih9eDN948LbnogKhIOWaAWAI4ernkzAsnfc1y5";
 
       const fetchNewsForDate = async (date) => {
@@ -62,6 +64,7 @@ function App() {
 
         return updatedNews;
       });
+      setIsLoading(false);
     }
 
     getAPI();
@@ -78,7 +81,7 @@ function App() {
   return (
     <>
       <Header />
-      <NewsList news={news} openModal={openModal} />
+      {isLoading ? <Loader /> : <NewsList news={news} openModal={openModal} />}
       {modalData && <Modal data={modalData} onClose={closeModal} />}
     </>
   );
@@ -104,6 +107,10 @@ function NewsList({ news, openModal }) {
       )}
     </div>
   );
+}
+
+function Loader() {
+  return <p className="loader">Loading...</p>;
 }
 
 function Trending({ data, onReadMore, className }) {
