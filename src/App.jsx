@@ -8,6 +8,7 @@ function App() {
   const [news, setNews] = useState([]);
   const [modalData, setModalData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     async function getAPI() {
@@ -33,6 +34,7 @@ function App() {
           };
         } catch (error) {
           console.error("There was a problem with fetching data...", error);
+          setError(error.message);
           return null;
         }
       };
@@ -81,10 +83,22 @@ function App() {
   return (
     <>
       <Header />
-      {isLoading ? <Loader /> : <NewsList news={news} openModal={openModal} />}
+      {/* {isLoading ? <Loader /> : <NewsList news={news} openModal={openModal} />} */}
+
+      {isLoading && <Loader />}
+      {!isLoading && !error && <NewsList news={news} openModal={openModal} />}
+      {error && <ErrorMessage message={error} />}
       {modalData && <Modal data={modalData} onClose={closeModal} />}
     </>
   );
+}
+
+function Loader() {
+  return <p className="loader">Loading...</p>;
+}
+
+function ErrorMessage({ message }) {
+  return <p className="error-message">{message}</p>;
 }
 
 function NewsList({ news, openModal }) {
@@ -107,10 +121,6 @@ function NewsList({ news, openModal }) {
       )}
     </div>
   );
-}
-
-function Loader() {
-  return <p className="loader">Loading...</p>;
 }
 
 function Trending({ data, onReadMore, className }) {
