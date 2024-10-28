@@ -298,11 +298,11 @@ body {
     grid-template-columns: 1fr 1fr;
   }
 
-  .top-news-section {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--grid-gap);
-  }
+ .top-news-section {
+  display: flex;
+  flex-direction: column; 
+  gap: var(--grid-gap); 
+}
 }
 
 @media (max-width: 768px) {
