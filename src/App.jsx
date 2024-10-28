@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import "./App.css";
-import TextExpander from "./assets/utils/TextExpander";
-import Button from "./components/Button";
 import Header from "./components/Header";
+import Footer from "./components/Footer"
 
 function App() {
   const [news, setNews] = useState([]);
@@ -83,12 +82,13 @@ function App() {
   return (
     <>
       <Header />
-      {/* {isLoading ? <Loader /> : <NewsList news={news} openModal={openModal} />} */}
 
       {isLoading && <Loader />}
       {!isLoading && !error && <NewsList news={news} openModal={openModal} />}
       {error && <ErrorMessage message={error} />}
       {modalData && <Modal data={modalData} onClose={closeModal} />}
+
+      <Footer />
     </>
   );
 }
@@ -101,29 +101,69 @@ function ErrorMessage({ message }) {
   return <p className="error-message">{message}</p>;
 }
 
-function NewsList({ news, openModal }) {
+function NewsList({ news }) {
+  const [modalData, setModalData] = useState(null);
+
   const today = new Date().toISOString().split("T")[0];
 
+  // Get today's news
+  const todayNews = news.find((item) => item.date === today);
+
+  // Get top 3 news items (excluding today's)
+  const topNews = news.filter((item) => item.date !== today).slice(0, 3);
+
+  // Get previous news (excluding today's and top 3)
+  const previousNews = news.filter((item) => item.date !== today).slice(3, 12);
+
+  const openModal = (item) => {
+    setModalData(item);
+  };
+
+  const closeModal = () => {
+    setModalData(null);
+  };
+
   return (
-    <div className="news-list">
-      {news.map((item, index) =>
-        item.date === today ? (
-          <div key={index} className="today-news">
-            <Trending data={item} onReadMore={() => openModal(item)} />
+    <>
+      <div className="news-list">
+       
+        {todayNews && (
+          <div className="today-news">
+            <Trending
+              data={todayNews}
+              onReadMore={() => openModal(todayNews)}
+            />
           </div>
-        ) : (
-          <Trending
-            key={index}
-            data={item}
-            onReadMore={() => openModal(item)}
-          />
-        )
-      )}
-    </div>
+        )}
+
+       
+        <div className="top-news-section">
+          {topNews.map((item, index) => (
+            <div key={index} className="top-news-item">
+              <Trending data={item} onReadMore={() => openModal(item)} />
+            </div>
+          ))}
+        </div>
+
+        
+        <div className="previous-news-grid">
+          {previousNews.map((item, index) => (
+            <Trending
+              key={index}
+              data={item}
+              onReadMore={() => openModal(item)}
+            />
+          ))}
+        </div>
+      </div>
+
+      
+      {modalData && <Modal data={modalData} onClose={closeModal} />}
+    </>
   );
 }
 
-function Trending({ data, onReadMore, className }) {
+function Trending({ data, onReadMore }) {
   if (!data) return null;
 
   const formattedDate = new Date(data.date).toLocaleDateString(undefined, {
@@ -133,37 +173,33 @@ function Trending({ data, onReadMore, className }) {
   });
 
   return (
-    <div className={`trending-container ${className}`}>
-      {" "}
-      <p className="trending-p">{formattedDate}</p>
-      <div className="trending-container2">
-        <div className="image-container">
-          {data.media_type === "video" ? (
-            <iframe
-              className="trending-video"
-              title={data.title}
-              src={data.url}
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
-          ) : (
-            <img className="trending-image" src={data.image} alt={data.title} />
-          )}
-          <div className="title-overlay">
-            <h2>{data.title}</h2>
-          </div>
-          <TextExpander numberOfText={30}>{data.description}</TextExpander>
-          <button className="read-more" onClick={onReadMore}>
-            Read More
-          </button>
+    <div className="trending-container">
+      <div className="image-container">
+        {data.media_type === "video" ? (
+          <iframe
+            className="trending-video"
+            title={data.title}
+            src={data.url}
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          />
+        ) : (
+          <img className="trending-image" src={data.image} alt={data.title} />
+        )}
+        <p className="trending-p">{formattedDate}</p>
+        <div className="title-overlay">
+          <h2>{data.title}</h2>
         </div>
+        <button className="read-more" onClick={onReadMore}>
+          Read More
+        </button>
       </div>
     </div>
   );
 }
 
-// Modal Component
+// modal components
 function Modal({ data, onClose }) {
   return (
     <div className="modal-overlay" onClick={onClose}>
@@ -182,5 +218,5 @@ function Modal({ data, onClose }) {
   );
 }
 
-//git try
+
 export default App;

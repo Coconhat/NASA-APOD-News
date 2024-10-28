@@ -1,0 +1,74 @@
+.custom-footer {
+  background: linear-gradient(transparent, rgba(27, 29, 33, 0.9)); 
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+
+.social-links {
+  margin-bottom: 20px;
+}
+
+.social-link {
+  color: white;
+  margin: 0 10px;
+  text-decoration: none;
+}
+
+.social-link:hover {
+  text-decoration: underline;
+}
+
+.newsletter-section {
+  margin-bottom: 20px;
+}
+
+.newsletter-input {
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  margin-right: 5px;
+}
+
+.subscribe-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.subscribe-btn:hover {
+  background-color: #0056b3;
+}
+
+.info-section {
+  margin-bottom: 20px;
+}
+
+.links-section {
+  margin-bottom: 20px;
+}
+
+.links-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.links-list li {
+  margin: 5px 0;
+}
+
+.links-list a {
+  color: white;
+  text-decoration: none;
+}
+
+.links-list a:hover {
+  text-decoration: underline;
+}
+
+.footer-bottom {
+  margin-top: 20px;
+}
