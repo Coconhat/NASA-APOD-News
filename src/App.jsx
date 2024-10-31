@@ -189,7 +189,7 @@ function Trending({ data, onReadMore }) {
         )}
         <p className="trending-p">{formattedDate}</p>
         <div className="title-overlay">
-          <h2>{data.title}</h2>
+          <h2 className="title-title">{data.title}</h2>
         </div>
         <button className="read-more" onClick={onReadMore}>
           Read More

@@ -1,4 +1,3 @@
-
 :root {
   --background-primary: #0f1117;
   --background-secondary: #1a1d24;
@@ -13,7 +12,6 @@
   --grid-gap: 1.5rem;
   --section-padding: 2rem;
 }
-
 
 body {
   background-color: var(--background-primary);
@@ -68,7 +66,6 @@ body {
   }
 }
 
-
 @media (max-width: 768px) {
   .header {
     padding: 1rem;
@@ -79,7 +76,6 @@ body {
   }
 }
 
-
 .letterHeader span {
   display: inline-block;
   transition: transform 0.3s ease;
@@ -88,7 +84,6 @@ body {
 .letterHeader:hover span {
   transform: translateY(-2px);
 }
-
 
 .news-list {
   max-width: 1600px;
@@ -108,7 +103,7 @@ body {
   height: 600px;
 }
 
-.today-news  {
+.today-news {
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -129,8 +124,6 @@ body {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   box-shadow: var(--card-shadow);
 }
-
-
 
 .today-news .image-container {
   flex: 1;
@@ -283,11 +276,18 @@ body {
   font-weight: 500;
 }
 
+.title-title {
+  max-width: 200px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+  margin: 0 auto;
+}
+
 .read-more:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(112, 71, 235, 0.3);
 }
-
 
 @media (max-width: 1200px) {
   .news-list {
@@ -298,11 +298,11 @@ body {
     grid-template-columns: 1fr 1fr;
   }
 
- .top-news-section {
-  display: flex;
-  flex-direction: column; 
-  gap: var(--grid-gap); 
-}
+  .top-news-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--grid-gap);
+  }
 }
 
 @media (max-width: 768px) {
@@ -339,17 +339,16 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  background: var(--modal-overlay); 
+  background: var(--modal-overlay);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000; 
+  z-index: 1000;
 }
 
-
 .modal-content {
-  background: var(--background-secondary); 
-  color: var(--text-primary);              
+  background: var(--background-secondary);
+  color: var(--text-primary);
   padding: 20px;
   border-radius: 10px;
   width: 80%;
@@ -357,15 +356,13 @@ body {
   max-height: 80vh;
   overflow-y: auto;
   position: relative;
-  box-shadow: var(--card-shadow);           
+  box-shadow: var(--card-shadow);
 }
-
 
 .modal-date {
   font-size: 14px;
-  color: var(--text-secondary);             
+  color: var(--text-secondary);
 }
-
 
 .modal-image {
   width: 100%;
@@ -376,16 +373,14 @@ body {
   margin-bottom: 10px;
 }
 
-
 .modal-description {
   max-height: 50vh;
   overflow-y: auto;
-  color: var(--text-primary);               
+  color: var(--text-primary);
 }
 
-
 .modal-close {
-  background: var(--accent-color);          
+  background: var(--accent-color);
   color: var(--text-primary);
   border: none;
   border-radius: 5px;
@@ -396,5 +391,5 @@ body {
 }
 
 .modal-close:hover {
-  background: #5834b8; 
+  background: #5834b8;
 }
