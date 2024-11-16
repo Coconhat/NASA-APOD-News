@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import "./App.css";
+import "./index.css";
 import Header from "./components/Header";
-import Footer from "./components/Footer"
+import Footer from "./components/Footer";
+import Loader from "./components/Loader";
 
 function App() {
   const [news, setNews] = useState([]);
@@ -84,6 +86,7 @@ function App() {
       <Header />
 
       {isLoading && <Loader />}
+
       {!isLoading && !error && <NewsList news={news} openModal={openModal} />}
       {error && <ErrorMessage message={error} />}
       {modalData && <Modal data={modalData} onClose={closeModal} />}
@@ -91,10 +94,6 @@ function App() {
       <Footer />
     </>
   );
-}
-
-function Loader() {
-  return <p className="loader">Loading...</p>;
 }
 
 function ErrorMessage({ message }) {
@@ -126,7 +125,6 @@ function NewsList({ news }) {
   return (
     <>
       <div className="news-list">
-       
         {todayNews && (
           <div className="today-news">
             <Trending
@@ -136,7 +134,6 @@ function NewsList({ news }) {
           </div>
         )}
 
-       
         <div className="top-news-section">
           {topNews.map((item, index) => (
             <div key={index} className="top-news-item">
@@ -145,7 +142,6 @@ function NewsList({ news }) {
           ))}
         </div>
 
-        
         <div className="previous-news-grid">
           {previousNews.map((item, index) => (
             <Trending
@@ -157,7 +153,6 @@ function NewsList({ news }) {
         </div>
       </div>
 
-      
       {modalData && <Modal data={modalData} onClose={closeModal} />}
     </>
   );
@@ -217,6 +212,5 @@ function Modal({ data, onClose }) {
     </div>
   );
 }
-
 
 export default App;
