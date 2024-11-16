@@ -17,7 +17,7 @@ export default function Footer() {
       </div>
 
       <div className="info-section">
-        <p>Made with ❤️ by Nhat Vu Le</p>
+        <p>Made with ❤️ by @coconhat_</p>
       </div>
 
       <div className="links-section"></div>
