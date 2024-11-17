@@ -186,7 +186,6 @@ function Trending({ data, onReadMore }) {
         <div className="title-overlay" onClick={onReadMore}>
           <h2 className="title-title">{data.title}</h2>
         </div>
-        
       </div>
     </div>
   );
@@ -194,15 +193,29 @@ function Trending({ data, onReadMore }) {
 
 // modal components
 function Modal({ data, onClose }) {
+  const [isFullScreen, setIsFullScreen] = useState(false);
+
+  const toggleFullScreen = () => {
+    setIsFullScreen((prev) => !prev);
+  };
+
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <h2>{data.title}</h2>
         <p className="modal-date">{new Date(data.date).toLocaleDateString()}</p>
-        <img className="modal-image" src={data.image} alt={data.title} />
+
+        <img
+          className={`modal-image ${isFullScreen ? "full-screen" : ""}`}
+          src={data.image}
+          alt={data.title}
+          onClick={toggleFullScreen}
+        />
+
         <div className="modal-description">
           <p>{data.description}</p>
         </div>
+
         <button className="modal-close" onClick={onClose}>
           Close
         </button>
