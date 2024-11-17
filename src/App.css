@@ -146,6 +146,33 @@ body {
   background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
   padding: 1rem 1.5rem;
 }
+.title-overlay {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+}
+
+.title-overlay::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0%;
+  height: 2px;
+  background-color: #007bff;
+  transition: width 0.3s ease;
+}
+
+.title-overlay:hover::after {
+  width: 100%;
+}
+
+.title-overlay:hover {
+  color: white;
+}
 
 .today-news h2 {
   font-size: 1.5rem;
@@ -395,7 +422,6 @@ body {
     gap: var(--grid-gap);
   }
 
- 
   .today-news {
     height: auto;
     min-height: auto;
@@ -403,7 +429,7 @@ body {
 
   .today-news .image-container {
     height: auto;
-    min-height: 300px; 
+    min-height: 300px;
   }
 
   .today-news .trending-image {
@@ -414,11 +440,11 @@ body {
   }
 
   .top-news-item {
-    min-height: 250px; 
+    min-height: 250px;
   }
 
   .top-news-section .image-container {
-    min-height: 250px; 
+    min-height: 250px;
   }
 }
 
@@ -471,9 +497,9 @@ body {
   color: var(--text-primary);
   padding: 20px;
   border-radius: 10px;
-  width: 80%;
-  max-width: 800px;
-  max-height: 80vh;
+  width: 90%;
+  max-width: 1200px;
+  max-height: 90vh;
   overflow-y: auto;
   position: relative;
   box-shadow: var(--card-shadow);
@@ -482,6 +508,8 @@ body {
 .modal-date {
   font-size: 14px;
   color: var(--text-secondary);
+  margin-bottom: 20px;
+  margin-top: 4px;
 }
 
 .modal-image {
@@ -490,14 +518,29 @@ body {
   max-height: 300px;
   object-fit: cover;
   border-radius: 8px;
-  margin-bottom: 10px;
+  margin-bottom: 13px;
 }
 
 .modal-description {
   max-height: 50vh;
   overflow-y: auto;
   color: var(--text-primary);
+  text-align: justify;
+  line-height: 1.8;
+  font-size: 1rem;
+  letter-spacing: 0.2px;
+  padding: 1.5rem 2rem;
 }
+
+.modal-description::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal-description::-webkit-scrollbar-thumb {
+  background: var(--accent-color);
+  border-radius: 3px;
+}
+
 
 .modal-close {
   background: var(--accent-color);

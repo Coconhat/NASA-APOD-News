@@ -183,12 +183,10 @@ function Trending({ data, onReadMore }) {
           <img className="trending-image" src={data.image} alt={data.title} />
         )}
         <p className="trending-p">{formattedDate}</p>
-        <div className="title-overlay">
+        <div className="title-overlay" onClick={onReadMore}>
           <h2 className="title-title">{data.title}</h2>
         </div>
-        <button className="read-more" onClick={onReadMore}>
-          Read More
-        </button>
+        
       </div>
     </div>
   );
