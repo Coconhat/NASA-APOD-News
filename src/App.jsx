@@ -51,12 +51,10 @@ function App() {
       const today = new Date();
       const newsPromises = [];
 
-      // First, try to fetch today's APOD
       const todayFormatted = today.toISOString().split("T")[0];
       const todayData = await fetchNewsForDate(todayFormatted);
       setIsTodayLoading(false);
 
-      // Then fetch the previous 30 days
       for (let i = 1; i <= 30; i++) {
         const date = new Date(today);
         date.setDate(today.getDate() - i);
@@ -153,9 +151,13 @@ function NewsList({ news, isTodayLoading }) {
         <div className="today-news">
           {isTodayLoading ? (
             <div className="today-loading-message">
-              <h2>Today's Astronomy Picture of the Day</h2>
-              <p className="text-center">
-                Today's picture is not yet available. Please check back later!
+              <h2 className="gradient-heading">
+                Today's Astronomy Picture of the Day
+              </h2>
+              <p className="relative inline-block before:absolute before:-inset-1 before:block before:-skew-y-3 text-slate-900 hover:text-slate-100 before:hover:bg-slate-800 ">
+                <p className="relative skew-y-3">
+                  Today's picture is not yet available. Please check back later!
+                </p>
               </p>
             </div>
           ) : todayNews ? (
@@ -164,11 +166,42 @@ function NewsList({ news, isTodayLoading }) {
               onReadMore={() => openModal(todayNews)}
             />
           ) : (
-            <div className="today-loading-message">
-              <h2>Today's Astronomy Picture of the Day</h2>
+            <div className="today-loading-message text-white text-lg">
+              <h2 className="font-semibold">
+                {["Today's", "Astronomy", "Picture", "of", "the", "Day"].map(
+                  (word, idx) => (
+                    <span
+                      key={idx}
+                      className="hover:animate-color-word transition-colors duration-500"
+                    >
+                      {word}{" "}
+                    </span>
+                  )
+                )}
+              </h2>
               <p>
-                Today's picture will be available soon. In the meantime, enjoy
-                our previous selections!
+                {[
+                  "Today's",
+                  "picture",
+                  "will",
+                  "be",
+                  "available",
+                  "soon.",
+                  "In",
+                  "the",
+                  "meantime,",
+                  "enjoy",
+                  "our",
+                  "previous",
+                  "selections!",
+                ].map((word, idx) => (
+                  <span
+                    key={idx}
+                    className="hover:animate-color-word transition-colors duration-500"
+                  >
+                    {word}{" "}
+                  </span>
+                ))}
               </p>
             </div>
           )}
@@ -198,7 +231,6 @@ function NewsList({ news, isTodayLoading }) {
   );
 }
 
-// Rest of the components remain the same...
 function Trending({ data, onReadMore }) {
   if (!data) return null;
 

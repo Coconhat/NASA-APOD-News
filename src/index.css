@@ -1,3 +1,25 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@keyframes colorWordChange {
+  0% {
+    color: #f8bc04;
+  }
+  25% {
+    color: #4a478a;
+  }
+  50% {
+    color: #1a2c80;
+  }
+  75% {
+    color: #282157;
+  }
+  100% {
+    color: #081448;
+  }
+}
+
+.hover\:animate-color-word:hover {
+  animation: colorWordChange 10s infinite;
+}
