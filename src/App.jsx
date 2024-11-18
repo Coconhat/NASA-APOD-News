@@ -10,6 +10,7 @@ function App() {
   const [modalData, setModalData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [isTodayLoading, setIsTodayLoading] = useState(true);
 
   useEffect(() => {
     async function getAPI() {
@@ -23,6 +24,9 @@ function App() {
           );
 
           if (!response.ok) {
+            if (response.status === 404) {
+              return null; // Return null for not yet available dates
+            }
             throw new Error("Error in fetching data...");
           }
           const data = await response.json();
@@ -32,9 +36,13 @@ function App() {
             title: data.title,
             description: data.explanation,
             date: data.date,
+            media_type: data.media_type,
           };
         } catch (error) {
           console.error("There was a problem with fetching data...", error);
+          if (error.message.includes("404")) {
+            return null; // Return null for not yet available dates
+          }
           setError(error.message);
           return null;
         }
@@ -43,26 +51,37 @@ function App() {
       const today = new Date();
       const newsPromises = [];
 
-      for (let i = 0; i < 30; i++) {
+      // First, try to fetch today's APOD
+      const todayFormatted = today.toISOString().split("T")[0];
+      const todayData = await fetchNewsForDate(todayFormatted);
+      setIsTodayLoading(false);
+
+      // Then fetch the previous 30 days
+      for (let i = 1; i <= 30; i++) {
         const date = new Date(today);
         date.setDate(today.getDate() - i);
         const formattedDate = date.toISOString().split("T")[0];
         newsPromises.push(fetchNewsForDate(formattedDate));
       }
 
-      const newsResults = await Promise.all(newsPromises);
+      const previousNewsResults = await Promise.all(newsPromises);
 
       setNews((prevNews) => {
         const existingTitles = new Set(prevNews.map((item) => item.title));
 
-        const newNewsItems = newsResults.filter(
+        // Combine today's data (if available) with previous results
+        const allResults = todayData
+          ? [todayData, ...previousNewsResults]
+          : previousNewsResults;
+
+        const newNewsItems = allResults.filter(
           (item) => item !== null && !existingTitles.has(item.title)
         );
 
         const updatedNews = [...prevNews, ...newNewsItems];
 
         if (updatedNews.length > 30) {
-          updatedNews.splice(0, updatedNews.length - 30);
+          updatedNews.splice(30);
         }
 
         return updatedNews;
@@ -87,7 +106,13 @@ function App() {
 
       {isLoading && <Loader />}
 
-      {!isLoading && !error && <NewsList news={news} openModal={openModal} />}
+      {!isLoading && !error && (
+        <NewsList
+          news={news}
+          openModal={openModal}
+          isTodayLoading={isTodayLoading}
+        />
+      )}
       {error && <ErrorMessage message={error} />}
       {modalData && <Modal data={modalData} onClose={closeModal} />}
 
@@ -100,7 +125,7 @@ function ErrorMessage({ message }) {
   return <p className="error-message">{message}</p>;
 }
 
-function NewsList({ news }) {
+function NewsList({ news, isTodayLoading }) {
   const [modalData, setModalData] = useState(null);
 
   const today = new Date().toISOString().split("T")[0];
@@ -125,14 +150,29 @@ function NewsList({ news }) {
   return (
     <>
       <div className="news-list">
-        {todayNews && (
-          <div className="today-news">
+        <div className="today-news">
+          {isTodayLoading ? (
+            <div className="today-loading-message">
+              <h2>Today's Astronomy Picture of the Day</h2>
+              <p className="text-center">
+                Today's picture is not yet available. Please check back later!
+              </p>
+            </div>
+          ) : todayNews ? (
             <Trending
               data={todayNews}
               onReadMore={() => openModal(todayNews)}
             />
-          </div>
-        )}
+          ) : (
+            <div className="today-loading-message">
+              <h2>Today's Astronomy Picture of the Day</h2>
+              <p>
+                Today's picture will be available soon. In the meantime, enjoy
+                our previous selections!
+              </p>
+            </div>
+          )}
+        </div>
 
         <div className="top-news-section">
           {topNews.map((item, index) => (
@@ -158,6 +198,7 @@ function NewsList({ news }) {
   );
 }
 
+// Rest of the components remain the same...
 function Trending({ data, onReadMore }) {
   if (!data) return null;
 
@@ -174,7 +215,7 @@ function Trending({ data, onReadMore }) {
           <iframe
             className="trending-video"
             title={data.title}
-            src={data.url}
+            src={data.image}
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
@@ -191,7 +232,6 @@ function Trending({ data, onReadMore }) {
   );
 }
 
-// modal components
 function Modal({ data, onClose }) {
   const [isFullScreen, setIsFullScreen] = useState(false);
 

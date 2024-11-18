@@ -89,6 +89,7 @@ body {
     height: auto;
     max-height: 410px;
   }
+  
 
   .today-news {
     height: auto;
@@ -126,6 +127,14 @@ body {
   border-radius: 16px;
   overflow: hidden;
   position: relative;
+}
+.today-loading-message {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center; 
+  height: 100%; 
 }
 
 .today-news .image-container {
