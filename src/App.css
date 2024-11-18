@@ -179,9 +179,6 @@ body {
   width: 100%;
 }
 
-.title-overlay:hover {
-  color: white;
-}
 
 .today-news h2 {
   font-size: 1.5rem;
@@ -305,14 +302,6 @@ body {
 }
 
 /* Common Card Styles */
-.trending-container {
-  background: var(--background-secondary);
-  border-radius: 12px;
-  overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  box-shadow: var(--card-shadow);
-}
-
 .image-container {
   position: relative;
   flex: 1;
