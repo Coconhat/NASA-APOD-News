@@ -18,6 +18,11 @@ function App() {
       const key = "ENih9eDN948LbnogKhIOWaAWAI4ernkzAsnfc1y5";
 
       const fetchNewsForDate = async (date) => {
+        const cachedData = localStorage.getItem(`nasa_apod_${date}`);
+        if (cachedData) {
+          return JSON.parse(cachedData);
+        }
+
         try {
           const response = await fetch(
             `https://api.nasa.gov/planetary/apod?api_key=${key}&date=${date}`
@@ -31,17 +36,25 @@ function App() {
           }
           const data = await response.json();
 
-          return {
+          const processedData = {
             image: data.url,
             title: data.title,
             description: data.explanation,
             date: data.date,
             media_type: data.media_type,
           };
+
+          // Store data in localStorage
+          localStorage.setItem(
+            `nasa_apod_${date}`,
+            JSON.stringify(processedData)
+          );
+
+          return processedData;
         } catch (error) {
           console.error("There was a problem with fetching data...", error);
           if (error.message.includes("404")) {
-            return null; // Return null for not yet available dates
+            return null; 
           }
           setError(error.message);
           return null;
@@ -67,7 +80,6 @@ function App() {
       setNews((prevNews) => {
         const existingTitles = new Set(prevNews.map((item) => item.title));
 
-        // Combine today's data (if available) with previous results
         const allResults = todayData
           ? [todayData, ...previousNewsResults]
           : previousNewsResults;
@@ -123,9 +135,7 @@ function ErrorMessage({ message }) {
   return <p className="error-message">{message}</p>;
 }
 
-function NewsList({ news, isTodayLoading }) {
-  const [modalData, setModalData] = useState(null);
-
+function NewsList({ news, openModal, isTodayLoading }) {
   const today = new Date().toISOString().split("T")[0];
 
   // Get today's news
@@ -136,14 +146,6 @@ function NewsList({ news, isTodayLoading }) {
 
   // Get previous news (excluding today's and top 3)
   const previousNews = news.filter((item) => item.date !== today).slice(3, 12);
-
-  const openModal = (item) => {
-    setModalData(item);
-  };
-
-  const closeModal = () => {
-    setModalData(null);
-  };
 
   return (
     <>
@@ -225,8 +227,6 @@ function NewsList({ news, isTodayLoading }) {
           ))}
         </div>
       </div>
-
-      {modalData && <Modal data={modalData} onClose={closeModal} />}
     </>
   );
 }
